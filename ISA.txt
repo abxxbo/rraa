@@ -1,0 +1,57 @@
+== RRAA ISA ==
+=== OPCODES ===
+
+LDA [reg] <- [val]		| Load val into reg
+JMP [addr]			| Set PC to addr
+
+
+ADD [reg], [n]			| Add n to reg
+SUB [reg], [n]			| Subtract n from reg
+DIV [reg], [n]			| reg/n
+MUL [reg], [n]			| n(reg)
+
+
+
+NOP				| No operation
+
+AND [val1] [val2]		| bitwise AND on val1, val2
+OR  [val1] [val2]		| bitwise OR  on val1, val2
+XOR [val1] [val2]		| bitwise XOR On val1, val2
+
+==== INTERRUPTS ====
+
+EXC [exception vector number]			| Cause an exception
+INT [interrupt number]				| Cause interrupt
+
+THESE ONLY APPLY IF YOU ARE BUILDING CODE WITH THE '-no-krnl' OPTION
+
+LEXC [addr to exception vector table]		| Load the exception vector table
+LINT [addr to interrupt vector table]		| Load the interrupt vector table
+
+=== EXCEPTION LIST ===
+0x00: Divide by 0
+0x02: Floating Point Exception
+
+=== EXCEPTION/INTERRUPT VECTOR TABLE ===
+
+==== EVT ====
+
+| Address  | Size in bytes | Designation    |
+| 0x0:0x00 |           128 | Divide by 0    |
+| 0x0:0x02 |           128 | Floating Point |
+
+
+==== IVT ====
+
+| Address  | Interrupt Number | Int # Description |
+| 0x0:0x10 |       IRQ 0      | Timer		  |
+| 0x0:0x20 |       IRQ 1      | Keyboard          |
+| 0x0:0xF2 |	   IRQ 2      | Mouse		  |
+| 0x1:0xFF |	 Reserved     | Reserved	  |
+
+=== REGISTERS ===
+b0-b7				| GENERAL PURPOSE
+sp				| STACK POINTER
+pc				| PROGRAM COUNTER
+
+
