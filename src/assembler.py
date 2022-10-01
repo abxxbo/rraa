@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-from enum import Enum
-import sys
+import sys, re
 
 MAGIC_NUMBER = 0x72726161 # rraa in hex
 
@@ -54,3 +53,41 @@ if output_bin == file:
 
 
 # Continue as normal, everything should be ok.
+
+# Write magic bytes
+with open(output_bin, "ab") as b22afbbb:
+    skfd: bytearray = [0x72, 0x72, 0x61, 0x61]
+    b22afbbb.write(bytearray(skfd))
+
+
+with open(file) as f:
+    for line in f:
+        # Ignore any comment
+        if line[0] == '@':
+            break
+
+        line = line.replace('\n', '').replace('\r', '')
+        tok = re.split(r'[, ]',line)
+
+        if '' in tok: tok.remove('')
+
+        print(str(tok))
+
+        opcode = tok[0].upper()
+
+        match opcode:
+            case LDA:
+                reg = 0
+                match tok[1]:
+                    case "b0": reg = 0x66
+                    case "b1": reg = 0x67
+                    case "b2": reg = 0x68
+                    case "b3": reg = 0x69
+                    case "b4": reg = 0x6a
+                    case "b5": reg = 0x6b
+                    case "b6": reg = 0x6c
+                    case "b7": reg = 0x6d
+                
+                print(f"LDA! reg is {tok[1]} (also {reg})")
+                print(tok[3])
+                Opcode.WriteOpcodeToOut(0x22, reg, int(tok[3]), output_bin)
