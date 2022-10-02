@@ -99,6 +99,22 @@ with open(file) as f:
 
 			case "JMP":
 				Opcode.WriteOpcodeToOut(0xe8, int(tok[1][2:], base=16), 0, output_bin)
+			
+			case "ADD":
+				reg = 0
+				match tok[1][0:2]:
+					case "b0": reg = 0x66
+					case "b1": reg = 0x67
+					case "b2": reg = 0x68
+					case "b3": reg = 0x69
+					case "b4": reg = 0x6a
+					case "b5": reg = 0x6b
+					case "b6": reg = 0x6c
+					case "b7": reg = 0x6d
+
+				print(reg)
+				print(tok[1][0:2])
+				Opcode.WriteOpcodeToOut(reg, 0x2f, int(tok[2]), output_bin)
 
 			case _:
 				break
