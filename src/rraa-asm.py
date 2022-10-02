@@ -17,22 +17,25 @@ NOP = 0xf2
 EXC = 0x72
 INT = 0x27
 
-
+stoi_det = False
 class Opcode:
-    # Example of flags for the opcode class
-    # OP       => LDA
-    # REG      => b2
-    # VAL      => 26
-    def __init__(self, op, reg, val):
-        self.op  = op
-        self.reg = reg
-        self.val = val
-    
-    def WriteOpcodeToOut(op, reg, val, output_file):
-        b: bytearray = [reg, op, 0, val]
-        print(b)
-        with open(output_file, "ab") as bin_file:
-            bin_file.write(bytearray(b))
+		# Example of flags for the opcode class
+		# OP			 => LDA
+		# REG			=> b2
+		# VAL			=> 26
+		def __init__(self, op, reg, val):
+				self.op	= op
+				self.reg = reg
+				self.val = val
+		
+		def WriteOpcodeToOut(op, reg, val, output_file):
+				b: bytearray = [reg, op, 0, val]
+				print(b)
+				with open(output_file, "ab") as bin_file:
+						bin_file.write(bytearray(b))
+		def WriteOneOpcode(opcode, out):
+			with open(out, "ab") as f:
+				f.write(bytearray(opcode))
 
 # Variables to use later on
 NO_KRNL_FLAG = False # Assume false by default
@@ -42,26 +45,29 @@ output_bin = "a.out"
 
 # Check arguments to set variables above.
 for i in range(len(sys.argv)):
-    if sys.argv[i] == "--no-krnl":
-        NO_KRNL_FLAG = True
-    elif sys.argv[i] == "--source":
-        file = sys.argv[i+1]
-    elif sys.argv[i] == "--output":
-        output_bin = sys.argv[i+1]
-    else:
-        continue
+		if sys.argv[i] == "--no-krnl":
+				NO_KRNL_FLAG = True
+		elif sys.argv[i] == "--source":
+				file = sys.argv[i+1]
+		elif sys.argv[i] == "--output":
+				output_bin = sys.argv[i+1]
+		else:
+				continue
 
 
 # We cannot output our binary to our input file, this
 # will most likely lead to some problems.
 if output_bin == file:
-    print("I cannot write a binary to the input file.")
-    sys.exit(0x7f)
+		print("I cannot write a binary to the input file.")
+		sys.exit(0x7f)
 
 
 def RaiseError(errno: str) -> None:
 	print(f"Error in {file}: {errno}")
 	sys.exit(2)
+
+def RaiseWarning(warn: str) -> None:
+	print(warn)
 
 
 # Continue as normal, everything should be ok.
@@ -72,8 +78,8 @@ with open(output_bin, "wb") as bffn:
 
 # Write magic bytes
 with open(output_bin, "ab") as b22afbbb:
-    skfd: bytearray = [0x72, 0x72, 0x61, 0x61]
-    b22afbbb.write(bytearray(skfd))
+		skfd: bytearray = [0x72, 0x72, 0x61, 0x61]
+		b22afbbb.write(bytearray(skfd))
 
 
 with open(file) as f:
@@ -109,9 +115,10 @@ with open(file) as f:
 					case "b7": reg = 0x6d
 
 				b_array = []
-				if tok[3][1] == "x":
-					b_array = [0x22, reg, int(tok[3][2:], base=16)]
-				else:
+				try:
+					if tok[3][1] == "x":
+						b_array = [0x22, reg, int(tok[3][2:], base=16)]
+				except:
 					b_array = [0x22, reg, int(tok[3])]
 				with open(output_bin, "ab") as lda_write:
 					lda_write.write(bytearray(b_array))
@@ -303,6 +310,10 @@ with open(file) as f:
 
 
 			##### INTERRUPTS #####
+			case "STOI": # Stop all interrupts
+				stoi_det = True
+				Opcode.WriteOneOpcode(0x38, output_bin)
+
 			case "EXC":
 				exc_num = 0
 				if tok[1][1] == 'x': # hex
@@ -312,8 +323,16 @@ with open(file) as f:
 				with open(output_bin, "ab") as f:
 					f.write(bytearray([EXC, exc_num]))
 
+			case "REEN":
+				stoi_det = False
+				Opcode.WriteOneOpcode(0x83, output_bin)
+
 
 			case "INT":
+				if stoi_det == True:
+					# Throw a warning, however
+					# still do the operation
+					RaiseWarning("[semantic] You are attempting to raise interrupt when they are off.")
 				int_num = 0		# interrupt number
 				try:
 					if tok[1][1] == 'x': # hex

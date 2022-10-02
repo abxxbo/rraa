@@ -32,6 +32,7 @@ XOR [val1] [val2]		| bitwise XOR On val1, val2
 EXC  [exception vector number]			| Cause an exception
 INT  [interrupt number]				      | Cause interrupt
 STOI                                | Clear interrupts
+REEN                                | Restart interrupts
 
 
 === EXCEPTION LIST ===
