@@ -13,6 +13,11 @@ MUL = 0x2c
 
 NOP = 0xf2
 
+
+EXC = 0x72
+INT = 0x27
+
+
 class Opcode:
     # Example of flags for the opcode class
     # OP       => LDA
@@ -121,9 +126,11 @@ with open(file) as f:
 					case "b7": reg = 0x6d
 
 				if tok[2][1] == "x":
-					Opcode.WriteOpcodeToOut(reg, 0x2f, int(tok[2][2:], base=16), output_bin)
+					with open(output_bin, "ab") as nop_write:
+						nop_write.write(bytearray([0x2f, reg, int(tok[2][2:], base=16)]))
 				else:
-					Opcode.WriteOpcodeToOut(reg, 0x2f, int(tok[2]), output_bin)
+					with open(output_bin, "ab") as nop_write:
+						nop_write.write(bytearray([0x2f, reg, int(tok[2])]))
 
 			case "SUB":
 				reg = 0
@@ -138,9 +145,11 @@ with open(file) as f:
 					case "b7": reg = 0x6d
 
 				if tok[2][1] == "x":
-					Opcode.WriteOpcodeToOut(reg, 0x2e, int(tok[2][2:], base=16), output_bin)
+					with open(output_bin, "ab") as nop_write:
+						nop_write.write(bytearray([0x2e, reg, int(tok[2][2:], base=16)]))
 				else:
-					Opcode.WriteOpcodeToOut(reg, 0x2e, int(tok[2]), output_bin)
+					with open(output_bin, "ab") as nop_write:
+						nop_write.write(bytearray([0x2e, reg, int(tok[2])]))
 
 
 			case "DIV":
@@ -156,9 +165,11 @@ with open(file) as f:
 					case "b7": reg = 0x6d
 
 				if tok[2][1] == "x":
-					Opcode.WriteOpcodeToOut(reg, 0x2d, int(tok[2][2:], base=16), output_bin)
+					with open(output_bin, "ab") as nop_write:
+						nop_write.write(bytearray([0x2d, reg, int(tok[2][2:], base=16)]))
 				else:
-					Opcode.WriteOpcodeToOut(reg, 0x2d, int(tok[2]), output_bin)
+					with open(output_bin, "ab") as nop_write:
+						nop_write.write(bytearray([0x2d, reg, int(tok[2])]))
 
 
 			case "MUL":
@@ -174,14 +185,31 @@ with open(file) as f:
 					case "b7": reg = 0x6d
 
 				if tok[2][1] == "x":
-					Opcode.WriteOpcodeToOut(reg, 0x2c, int(tok[2][2:], base=16), output_bin)
+					with open(output_bin, "ab") as nop_write:
+						nop_write.write(bytearray([0x2c, reg, int(tok[2][2:], base=16)]))
 				else:
-					Opcode.WriteOpcodeToOut(reg, 0x2c, int(tok[2]), output_bin)
+					with open(output_bin, "ab") as nop_write:
+						nop_write.write(bytearray([0x2c, reg, int(tok[2])]))
 								
 
 			case "NOP":
 				with open(output_bin, "ab") as nop_write:
 					nop_write.write(bytearray([0xf2]))
+
+
+			# TODO: implement AND, OR, and XOR.
+			# These should check if val1 is a register, if not,
+			# throw an error
+
+
+			case "EXC":
+				exc_num = 0
+				if tok[1][1] == 'x': # hex
+					exc_num = int(tok[1][2:], base=16)
+				else:
+					exc_num = int(tok[1])
+				with open(output_bin, "ab") as f:
+					f.write(bytearray([EXC, exc_num]))
 
 
 			case _:
