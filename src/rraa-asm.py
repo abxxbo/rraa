@@ -108,7 +108,13 @@ with open(file) as f:
 					case "b6": reg = 0x6c
 					case "b7": reg = 0x6d
 
-				Opcode.WriteOpcodeToOut(0x22, reg, int(tok[3]), output_bin)
+				b_array = []
+				if tok[3][1] == "x":
+					b_array = [0x22, reg, int(tok[3][2:], base=16)]
+				else:
+					b_array = [0x22, reg, int(tok[3])]
+				with open(output_bin, "ab") as lda_write:
+					lda_write.write(bytearray(b_array))
 
 			case "JMP":
 				Opcode.WriteOpcodeToOut(0xe8, int(tok[1][2:], base=16), 0, output_bin)
@@ -214,13 +220,22 @@ with open(file) as f:
 
 			case "INT":
 				int_num = 0		# interrupt number
-				if tok[1][1] == 'x': # hex
-					int_num = int(tok[1][2:], base=16)
-				else:
+				try:
+					if tok[1][1] == 'x': # hex
+						int_num = int(tok[1][2:], base=16)
+					else:
+						int_num = int(tok[1])
+				except:
+					# it can't be hex
+					# so just fall back
+					# to number
 					int_num = int(tok[1])
 				with open(output_bin, "ab") as f:
-					f.write(bytearray([INT, exc_num]))
+					f.write(bytearray([INT, int_num]))
 
 
+			case "HLT":
+				with open(output_bin, "ab") as f:
+					f.write(bytearray([0xff]))
 			case _:
 				break
