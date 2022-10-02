@@ -202,12 +202,107 @@ with open(file) as f:
 				with open(output_bin, "ab") as nop_write:
 					nop_write.write(bytearray([0xf2]))
 
+			case "AND":
+				reg = 0
+				match tok[1][0:2]:
+					case "b0": reg = 0x66
+					case "b1": reg = 0x67
+					case "b2": reg = 0x68
+					case "b3": reg = 0x69
+					case "b4": reg = 0x6a
+					case "b5": reg = 0x6b
+					case "b6": reg = 0x6c
+					case "b7": reg = 0x6d
+					case _:
+						RaiseError("Unknown register.")
 
-			# TODO: implement AND, OR, and XOR.
-			# These should check if val1 is a register, if not,
-			# throw an error
+				# Cool, now get val2
+				val2 = tok[2]
+				upd_val2 = 0
+				print(val2)
+				try:
+					if tok[2][1] == "x":
+						upd_val2 = int(tok[2][2:], base=16)
+					else:
+						upd_val2 = int(tok[2])
+				except:
+					# It's just an integer...
+					upd_val2 = int(tok[2])
 
 
+				# Write to the file
+				with open(output_bin, "ab") as f:
+					f.write(bytearray([0x72, reg, upd_val2]))
+
+			case "OR":
+				reg = 0
+				match tok[1][0:2]:
+					case "b0": reg = 0x66
+					case "b1": reg = 0x67
+					case "b2": reg = 0x68
+					case "b3": reg = 0x69
+					case "b4": reg = 0x6a
+					case "b5": reg = 0x6b
+					case "b6": reg = 0x6c
+					case "b7": reg = 0x6d
+					case _:
+						RaiseError("Unknown register.")
+
+				# Cool, now get val2
+				val2 = tok[2]
+				upd_val2 = 0
+				print(val2)
+				try:
+					if tok[2][1] == "x":
+						upd_val2 = int(tok[2][2:], base=16)
+					else:
+						upd_val2 = int(tok[2])
+				except:
+					# It's just an integer...
+					upd_val2 = int(tok[2])
+
+
+				# Write to the file
+				with open(output_bin, "ab") as f:
+					f.write(bytearray([0x73, reg, upd_val2]))
+
+
+			# TODO: rewrite XOR so that
+			# XOR b0, b0 is possible.
+			case "XOR":
+				reg = 0
+				match tok[1][0:2]:
+					case "b0": reg = 0x66
+					case "b1": reg = 0x67
+					case "b2": reg = 0x68
+					case "b3": reg = 0x69
+					case "b4": reg = 0x6a
+					case "b5": reg = 0x6b
+					case "b6": reg = 0x6c
+					case "b7": reg = 0x6d
+					case _:
+						RaiseError("Unknown register.")
+
+				# Cool, now get val2
+				val2 = tok[2]
+				upd_val2 = 0
+				print(val2)
+				try:
+					if tok[2][1] == "x":
+						upd_val2 = int(tok[2][2:], base=16)
+					else:
+						upd_val2 = int(tok[2])
+				except:
+					# It's just an integer...
+					upd_val2 = int(tok[2])
+
+
+				# Write to the file
+				with open(output_bin, "ab") as f:
+					f.write(bytearray([0x74, reg, upd_val2]))
+
+
+			##### INTERRUPTS #####
 			case "EXC":
 				exc_num = 0
 				if tok[1][1] == 'x': # hex
