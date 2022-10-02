@@ -52,7 +52,16 @@ if output_bin == file:
     sys.exit(0x7f)
 
 
+def RaiseError(errno: str) -> None:
+	print(f"Error in {file}: {errno}")
+	sys.exit(2)
+
+
 # Continue as normal, everything should be ok.
+
+# Zero it out
+with open(output_bin, "wb") as bffn:
+	bffn.close()
 
 # Write magic bytes
 with open(output_bin, "ab") as b22afbbb:
@@ -61,33 +70,29 @@ with open(output_bin, "ab") as b22afbbb:
 
 
 with open(file) as f:
-    for line in f:
-        # Ignore any comment
-        if line[0] == '@':
-            break
+	for line in f:
+		# Ignore any comment
+		if line[0] == '@':
+			break
 
-        line = line.replace('\n', '').replace('\r', '')
-        tok = re.split(r'[, ]',line)
+		line = line.replace('\n', '').replace('\r', '')
+		tok = re.split(r'[, ]',line)
 
-        if '' in tok: tok.remove('')
+		if '' in tok: tok.remove('')
+		opcode = tok[0].upper()
 
-        print(str(tok))
+		match opcode:
+			case LDA:
+				if tok[2] != "<-": RaiseError("arrow misconfigured")
+				reg = 0
+				match tok[1]:
+					case "b0": reg = 0x66
+					case "b1": reg = 0x67
+					case "b2": reg = 0x68
+					case "b3": reg = 0x69
+					case "b4": reg = 0x6a
+					case "b5": reg = 0x6b
+					case "b6": reg = 0x6c
+					case "b7": reg = 0x6d
 
-        opcode = tok[0].upper()
-
-        match opcode:
-            case LDA:
-                reg = 0
-                match tok[1]:
-                    case "b0": reg = 0x66
-                    case "b1": reg = 0x67
-                    case "b2": reg = 0x68
-                    case "b3": reg = 0x69
-                    case "b4": reg = 0x6a
-                    case "b5": reg = 0x6b
-                    case "b6": reg = 0x6c
-                    case "b7": reg = 0x6d
-                
-                print(f"LDA! reg is {tok[1]} (also {reg})")
-                print(tok[3])
-                Opcode.WriteOpcodeToOut(0x22, reg, int(tok[3]), output_bin)
+				Opcode.WriteOpcodeToOut(0x22, reg, int(tok[3]), output_bin)
