@@ -118,6 +118,8 @@ with open(file) as f:
 				try:
 					if tok[3][1] == "x":
 						b_array = [0x22, reg, int(tok[3][2:], base=16)]
+					else:
+						b_array = [0x22, reg, int(tok[3])]
 				except:
 					b_array = [0x22, reg, int(tok[3])]
 				with open(output_bin, "ab") as lda_write:
@@ -308,11 +310,59 @@ with open(file) as f:
 				with open(output_bin, "ab") as f:
 					f.write(bytearray([0x74, reg, upd_val2]))
 
+			##### STACK ####
+			case "PUSHB":
+				is_reg = False	# assume no
+				reg_v  = 0
+				match tok[1]:
+					case "b0": is_reg = True
+					case "b1": is_reg = True
+					case "b2": is_reg = True
+					case "b3": is_reg = True
+					case "b4": is_reg = True
+					case "b5": is_reg = True
+					case "b6": is_reg = True
+					case "b7": is_reg = True
+					case _: is_reg = False
+
+				val_to_push = 0
+
+				if is_reg == False:
+					try:
+						if tok[1][1] == "x": # hex, just convert
+							val_to_push = int(tok[1][2:], base=16)
+						else:
+							val_to_push = int(tok[1])
+					except:	# index out of range?
+						val_to_push = int(tok[1])
+				else:
+					match tok[1]:
+						case "b0": reg_v = 0x66
+						case "b1": reg_v = 0x67
+						case "b2": reg_v = 0x68
+						case "b3": reg_v = 0x69
+						case "b4": reg_v = 0x6a
+						case "b5": reg_v = 0x6b
+						case "b6": reg_v = 0x6c
+						case "b7": reg_v = 0x6d
+
+				if reg_v == 0:
+					# Write opcode
+					# I should really write a function to do this,
+					# but for now I'm lazy, so I'm gonna mark it as
+					# a TODO.
+					with open(output_bin, "ab") as f:
+						f.write(bytearray([0xca, val_to_push]))
+				else:
+					with open(output_bin, "ab") as f:
+						f.write(bytearray([0xca, reg_v]))
+
 
 			##### INTERRUPTS #####
 			case "STOI": # Stop all interrupts
 				stoi_det = True
-				Opcode.WriteOneOpcode(0x38, output_bin)
+				with open(output_bin, "ab") as f:
+					f.write(bytearray([0x38]))
 
 			case "EXC":
 				exc_num = 0
