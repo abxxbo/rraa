@@ -23,11 +23,6 @@ XOR [val1] [val2]		| bitwise XOR On val1, val2
 EXC [exception vector number]			| Cause an exception
 INT [interrupt number]				| Cause interrupt
 
-THESE ONLY APPLY IF YOU ARE BUILDING CODE WITH THE '-no-krnl' OPTION
-
-LEXC [addr to exception vector table]		| Load the exception vector table
-LINT [addr to interrupt vector table]		| Load the interrupt vector table
-
 === EXCEPTION LIST ===
 0x00: Divide by 0
 0x02: Floating Point Exception
