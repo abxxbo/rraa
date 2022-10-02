@@ -212,5 +212,15 @@ with open(file) as f:
 					f.write(bytearray([EXC, exc_num]))
 
 
+			case "INT":
+				int_num = 0		# interrupt number
+				if tok[1][1] == 'x': # hex
+					int_num = int(tok[1][2:], base=16)
+				else:
+					int_num = int(tok[1])
+				with open(output_bin, "ab") as f:
+					f.write(bytearray([INT, exc_num]))
+
+
 			case _:
 				break
