@@ -82,7 +82,7 @@ with open(file) as f:
 		opcode = tok[0].upper()
 
 		match opcode:
-			case LDA:
+			case "LDA":
 				if tok[2] != "<-": RaiseError("arrow misconfigured")
 				reg = 0
 				match tok[1]:
@@ -96,3 +96,9 @@ with open(file) as f:
 					case "b7": reg = 0x6d
 
 				Opcode.WriteOpcodeToOut(0x22, reg, int(tok[3]), output_bin)
+
+			case "JMP":
+				Opcode.WriteOpcodeToOut(0xe8, int(tok[1][2:], base=16), 0, output_bin)
+
+			case _:
+				break
