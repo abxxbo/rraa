@@ -1,5 +1,5 @@
 CC 			:= gcc
-CFLAGS	:= -Wall -std=c99 -Wextra -g
+CFLAGS	:= -Wall -std=c99 -Wextra -g -Iinclude
 
 all: rraa-asm
 
