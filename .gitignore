@@ -1,5 +1,7 @@
 # Test assembbly file for RRAA
 test.RRAA
+a.out
+test.rraa
 
 # editor
 .vscode/
