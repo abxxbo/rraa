@@ -11,6 +11,8 @@ SUB = 0x2e
 DIV = 0x2d
 MUL = 0x2c
 
+NOP = 0xf2
+
 class Opcode:
     # Example of flags for the opcode class
     # OP       => LDA
@@ -79,7 +81,13 @@ with open(file) as f:
 		tok = re.split(r'[, ]',line)
 
 		if '' in tok: tok.remove('')
-		opcode = tok[0].upper()
+
+		try:
+			opcode = tok[0].upper()
+		except:
+			pass		# line is empty
+
+
 
 		match opcode:
 			case "LDA":
@@ -112,9 +120,69 @@ with open(file) as f:
 					case "b6": reg = 0x6c
 					case "b7": reg = 0x6d
 
-				print(reg)
-				print(tok[1][0:2])
-				Opcode.WriteOpcodeToOut(reg, 0x2f, int(tok[2]), output_bin)
+				if tok[2][1] == "x":
+					Opcode.WriteOpcodeToOut(reg, 0x2f, int(tok[2][2:], base=16), output_bin)
+				else:
+					Opcode.WriteOpcodeToOut(reg, 0x2f, int(tok[2]), output_bin)
+
+			case "SUB":
+				reg = 0
+				match tok[1][0:2]:
+					case "b0": reg = 0x66
+					case "b1": reg = 0x67
+					case "b2": reg = 0x68
+					case "b3": reg = 0x69
+					case "b4": reg = 0x6a
+					case "b5": reg = 0x6b
+					case "b6": reg = 0x6c
+					case "b7": reg = 0x6d
+
+				if tok[2][1] == "x":
+					Opcode.WriteOpcodeToOut(reg, 0x2e, int(tok[2][2:], base=16), output_bin)
+				else:
+					Opcode.WriteOpcodeToOut(reg, 0x2e, int(tok[2]), output_bin)
+
+
+			case "DIV":
+				reg = 0
+				match tok[1][0:2]:
+					case "b0": reg = 0x66
+					case "b1": reg = 0x67
+					case "b2": reg = 0x68
+					case "b3": reg = 0x69
+					case "b4": reg = 0x6a
+					case "b5": reg = 0x6b
+					case "b6": reg = 0x6c
+					case "b7": reg = 0x6d
+
+				if tok[2][1] == "x":
+					Opcode.WriteOpcodeToOut(reg, 0x2d, int(tok[2][2:], base=16), output_bin)
+				else:
+					Opcode.WriteOpcodeToOut(reg, 0x2d, int(tok[2]), output_bin)
+
+
+			case "MUL":
+				reg = 0
+				match tok[1][0:2]:
+					case "b0": reg = 0x66
+					case "b1": reg = 0x67
+					case "b2": reg = 0x68
+					case "b3": reg = 0x69
+					case "b4": reg = 0x6a
+					case "b5": reg = 0x6b
+					case "b6": reg = 0x6c
+					case "b7": reg = 0x6d
+
+				if tok[2][1] == "x":
+					Opcode.WriteOpcodeToOut(reg, 0x2c, int(tok[2][2:], base=16), output_bin)
+				else:
+					Opcode.WriteOpcodeToOut(reg, 0x2c, int(tok[2]), output_bin)
+								
+
+			case "NOP":
+				with open(output_bin, "ab") as nop_write:
+					nop_write.write(bytearray([0xf2]))
+
 
 			case _:
 				break
