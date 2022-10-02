@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
-import sys, re
+import sys, re, time
 
+
+start_time = time.time()
 MAGIC_NUMBER = 0x72726161 # rraa in hex
 
 LDA = 0x22
@@ -35,7 +37,7 @@ class Opcode:
 						bin_file.write(bytearray(b))
 		def WriteOneOpcode(opcode, out):
 			with open(out, "ab") as f:
-				f.write(bytearray(opcode))
+				f.write(bytearray([opcode]))
 
 # Variables to use later on
 NO_KRNL_FLAG = False # Assume false by default
@@ -357,6 +359,9 @@ with open(file) as f:
 					with open(output_bin, "ab") as f:
 						f.write(bytearray([0xca, reg_v]))
 
+			case "POPB":
+				Opcode.WriteOneOpcode(0xac, output_bin)
+
 
 			##### INTERRUPTS #####
 			case "STOI": # Stop all interrupts
@@ -403,3 +408,6 @@ with open(file) as f:
 					f.write(bytearray([0xff]))
 			case _:
 				break
+
+
+print(f"Assembled {file} in {time.time()-start_time}s")
