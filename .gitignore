@@ -1,0 +1,10 @@
+# Test assembbly file for RRAA
+test.RRAA
+
+# editor
+.vscode/
+
+
+# emulator
+bin/
+obj/
