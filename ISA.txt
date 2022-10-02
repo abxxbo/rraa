@@ -1,27 +1,38 @@
 == RRAA ISA ==
+
+
 === OPCODES ===
 
 LDA [reg] <- [val]		| Load val into reg
-JMP [addr]			| Set PC to addr
+JMP [addr]			      | Set PC to addr
 
 
+==== ARITHMETIC ====
 ADD [reg], [n]			| Add n to reg
 SUB [reg], [n]			| Subtract n from reg
 DIV [reg], [n]			| reg/n
 MUL [reg], [n]			| n(reg)
 
 
+==== UNCATEGORIZED ====
+NOP				          | No operation
+HLT                 | Stop processor from executing any code
 
-NOP				| No operation
+==== STACK ====
+PUSHB [val8]         | Push 8-bit value to stack
+POPB                 | Pop latest byte off stack
 
+==== BIWISE ====
 AND [val1] [val2]		| bitwise AND on val1, val2
 OR  [val1] [val2]		| bitwise OR  on val1, val2
 XOR [val1] [val2]		| bitwise XOR On val1, val2
 
 ==== INTERRUPTS ====
 
-EXC [exception vector number]			| Cause an exception
-INT [interrupt number]				| Cause interrupt
+EXC  [exception vector number]			| Cause an exception
+INT  [interrupt number]				      | Cause interrupt
+STOI                                | Clear interrupts
+
 
 === EXCEPTION LIST ===
 0x00: Divide by 0
@@ -39,14 +50,28 @@ INT [interrupt number]				| Cause interrupt
 ==== IVT ====
 
 | Address  | Interrupt Number | Int # Description |
-| 0x0:0x10 |       IRQ 0      | Timer		  |
+| 0x0:0x10 |       IRQ 0      | Timer		          |
 | 0x0:0x20 |       IRQ 1      | Keyboard          |
-| 0x0:0xF2 |	   IRQ 2      | Mouse		  |
-| 0x1:0xFF |	 Reserved     | Reserved	  |
+| 0x0:0xF2 |	     IRQ 2      | Mouse		          |
+| 0x1:0xFF |	   Reserved     | Reserved          |
 
 === REGISTERS ===
 b0-b7				| GENERAL PURPOSE
-sp				| STACK POINTER
-pc				| PROGRAM COUNTER
+sp				  | STACK POINTER
+pc				  | PROGRAM COUNTER
 
 
+=== MEMORY LAYOUT ===
+0x0000..0x00FF -> Bootsector
+0x0100..0x1000 -> Program
+0x1001..0x2000 -> RAM
+0x2001..0x200F -> Stack
+
+== BOOT PROCESS ==
+On boot, RRAA will look for begin to execute any code at
+0x0000. Until byte 0x00FF, RRAA will assume code is in the
+bootsector.
+
+Once byte 0x00FF is reached, RRAA will jump to 0x0100 and
+execute code as a 'kernel', giving it Ring-0 access to the
+CPU.
