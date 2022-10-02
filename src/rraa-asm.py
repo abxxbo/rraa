@@ -410,4 +410,4 @@ with open(file) as f:
 				break
 
 
-print(f"Assembled {file} in {time.time()-start_time}s")
+print(f"Assembled {file} in {round(time.time()-start_time, 5)}s")
