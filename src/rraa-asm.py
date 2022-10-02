@@ -85,7 +85,7 @@ with open(output_bin, "ab") as b22afbbb:
 with open(file) as f:
 	for line in f:
 		# Ignore any comment
-		if line[0] == '@':
+		if line[0].startswith('@'):
 			break
 
 		line = line.replace('\n', '').replace('\r', '')
