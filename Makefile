@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -Wall -Wextra -lraylib -std=gnu99
+CFLAGS := -Wall -Wextra -lraylib -lm -std=gnu99
 
 all: rraa
 
