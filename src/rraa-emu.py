@@ -31,6 +31,7 @@ b7 = 0
 
 ## Memory
 memory: int = []
+stack: int = []
 sp: int = 0
 
 alr_exec = False # When JMP is detected, this flag will be
@@ -128,6 +129,28 @@ with open(bin, "rb") as f:
 					rraa_exit()
 				
 				### Stack ###
+				case 0xca: # PUSHB
+					print(line[i+1])
+					match line[i+1]:
+						case 0x66: stack[sp] = b0
+						case 0x67: stack[sp] = b1
+						case 0x68: stack[sp] = b2
+						case 0x69: stack[sp] = b3
+						case 0x6a: stack[sp] = b4
+						case 0x6b: stack[sp] = b5
+						case 0x6c: stack[sp] = b6
+						case 0x6d: stack[sp] = b7
+						case _: 	 stack[sp] = line[i+1]
+
+					b0 = 0
+					b1 = b0
+					b2 = b1
+					b3 = b2
+					b4 = b3
+					b5 = b4
+					b6 = b5
+					b7 = b6				
+					
 
 				### Bitwise ###
 
