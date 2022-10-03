@@ -94,14 +94,14 @@ with open(bin, "rb") as f:
 
 				case 0x2d:	# DIV
 					match line[i+1]:
-						case 0x66: b0 /= line[i+2]
-						case 0x67: b1 /= line[i+2]
-						case 0x68: b2 /= line[i+2]
-						case 0x69: b3 /= line[i+2]
-						case 0x6a: b4 /= line[i+2]
-						case 0x6b: b5 /= line[i+2]
-						case 0x6c: b6 /= line[i+2]
-						case 0x6d: b7 /= line[i+2]
+						case 0x66: b0 //= line[i+2]
+						case 0x67: b1 //= line[i+2]
+						case 0x68: b2 //= line[i+2]
+						case 0x69: b3 //= line[i+2]
+						case 0x6a: b4 //= line[i+2]
+						case 0x6b: b5 //= line[i+2]
+						case 0x6c: b6 //= line[i+2]
+						case 0x6d: b7 //= line[i+2]
 					
 					i += 3
 
