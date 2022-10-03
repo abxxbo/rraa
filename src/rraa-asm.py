@@ -142,10 +142,14 @@ with open(file) as f:
 					case "b6": reg = 0x6c
 					case "b7": reg = 0x6d
 
-				if tok[2][1] == "x":
-					with open(output_bin, "ab") as nop_write:
-						nop_write.write(bytearray([0x2f, reg, int(tok[2][2:], base=16)]))
-				else:
+				try:
+					if tok[2][1] == "x":
+						with open(output_bin, "ab") as nop_write:
+							nop_write.write(bytearray([0x2f, reg, int(tok[2][2:], base=16)]))
+					else:
+						with open(output_bin, "ab") as nop_write:
+							nop_write.write(bytearray([0x2f, reg, int(tok[2])]))
+				except:
 					with open(output_bin, "ab") as nop_write:
 						nop_write.write(bytearray([0x2f, reg, int(tok[2])]))
 
@@ -161,10 +165,14 @@ with open(file) as f:
 					case "b6": reg = 0x6c
 					case "b7": reg = 0x6d
 
-				if tok[2][1] == "x":
-					with open(output_bin, "ab") as nop_write:
-						nop_write.write(bytearray([0x2e, reg, int(tok[2][2:], base=16)]))
-				else:
+				try:
+					if tok[2][1] == "x":
+						with open(output_bin, "ab") as nop_write:
+							nop_write.write(bytearray([0x2e, reg, int(tok[2][2:], base=16)]))
+					else:
+						with open(output_bin, "ab") as nop_write:
+							nop_write.write(bytearray([0x2e, reg, int(tok[2])]))
+				except:
 					with open(output_bin, "ab") as nop_write:
 						nop_write.write(bytearray([0x2e, reg, int(tok[2])]))
 
@@ -181,13 +189,16 @@ with open(file) as f:
 					case "b6": reg = 0x6c
 					case "b7": reg = 0x6d
 
-				if tok[2][1] == "x":
-					with open(output_bin, "ab") as nop_write:
-						nop_write.write(bytearray([0x2d, reg, int(tok[2][2:], base=16)]))
-				else:
+				try:
+					if tok[2][1] == "x":
+						with open(output_bin, "ab") as nop_write:
+							nop_write.write(bytearray([0x2d, reg, int(tok[2][2:], base=16)]))
+					else:
+						with open(output_bin, "ab") as nop_write:
+							nop_write.write(bytearray([0x2d, reg, int(tok[2])]))
+				except:
 					with open(output_bin, "ab") as nop_write:
 						nop_write.write(bytearray([0x2d, reg, int(tok[2])]))
-
 
 			case "MUL":
 				reg = 0
@@ -201,13 +212,16 @@ with open(file) as f:
 					case "b6": reg = 0x6c
 					case "b7": reg = 0x6d
 
-				if tok[2][1] == "x":
-					with open(output_bin, "ab") as nop_write:
-						nop_write.write(bytearray([0x2c, reg, int(tok[2][2:], base=16)]))
-				else:
-					with open(output_bin, "ab") as nop_write:
-						nop_write.write(bytearray([0x2c, reg, int(tok[2])]))
-								
+				try:
+					if tok[2][1] == "x":
+						with open(output_bin, "ab") as nop_write:
+							nop_write.write(bytearray([0x2c, reg, int(tok[2][2:], base=16)]))
+					else:
+						with open(output_bin, "ab") as nop_write:
+							nop_write.write(bytearray([0x2c, reg, int(tok[2])]))
+				except:
+						with open(output_bin, "ab") as nop_write:
+							nop_write.write(bytearray([0x2c, reg, int(tok[2])]))
 
 			case "NOP":
 				with open(output_bin, "ab") as nop_write:
