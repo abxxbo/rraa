@@ -33,12 +33,15 @@ b7 = 0
 memory: int = []
 sp: int = 0
 
+alr_exec = False # When JMP is detected, this flag will be
+								 # be set, and then jump.
+
 # Check through each opcode
 with open(bin, "rb") as f:
 	for line in f:
 		for i in range(len(line)):
 			match line[i]:
-				case 0x22:
+				case 0x22: # LDA
 					reg = 0
 					match line[i+1]:
 						case 0x66: b0 = line[i+2]
@@ -49,6 +52,12 @@ with open(bin, "rb") as f:
 						case 0x6b: b5 = line[i+2]
 						case 0x6c: b6 = line[i+2]
 						case 0x6d: b7 = line[i+2]
-						
 
-print(f"{b0} | {b1} | {b2} | {b3} | {b4} | {b5} | {b6} | {b7}")
+					i += 3
+
+				case 0xe8: # JMP
+					# FIXME: This theoretical implementation
+					# of JMP does not work.
+					if alr_exec == False:
+						i = line[i+1]
+						alr_exec = True
