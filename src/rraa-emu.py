@@ -46,7 +46,6 @@ with open(bin, "rb") as f:
 		for i in range(len(line)):
 			match line[i]:
 				case 0x22: # LDA
-					reg = 0
 					match line[i+1]:
 						case 0x66: b0 = line[i+2]
 						case 0x67: b1 = line[i+2]
@@ -67,6 +66,59 @@ with open(bin, "rb") as f:
 						alr_exec = True
 
 				### Arithmetic ###
+				case 0x2f:		# ADD
+					match line[i+1]:
+						case 0x66: b0 += line[i+2]
+						case 0x67: b1 += line[i+2]
+						case 0x68: b2 += line[i+2]
+						case 0x69: b3 += line[i+2]
+						case 0x6a: b4 += line[i+2]
+						case 0x6b: b5 += line[i+2]
+						case 0x6c: b6 += line[i+2]
+						case 0x6d: b7 += line[i+2]
+					
+					i += 3
+				
+				case 0x2e:	# SUB
+					match line[i+1]:
+						case 0x66: b0 -= line[i+2]
+						case 0x67: b1 -= line[i+2]
+						case 0x68: b2 -= line[i+2]
+						case 0x69: b3 -= line[i+2]
+						case 0x6a: b4 -= line[i+2]
+						case 0x6b: b5 -= line[i+2]
+						case 0x6c: b6 -= line[i+2]
+						case 0x6d: b7 -= line[i+2]
+					
+					i += 3
+
+				case 0x2d:	# DIV
+					match line[i+1]:
+						case 0x66: b0 /= line[i+2]
+						case 0x67: b1 /= line[i+2]
+						case 0x68: b2 /= line[i+2]
+						case 0x69: b3 /= line[i+2]
+						case 0x6a: b4 /= line[i+2]
+						case 0x6b: b5 /= line[i+2]
+						case 0x6c: b6 /= line[i+2]
+						case 0x6d: b7 /= line[i+2]
+					
+					i += 3
+
+				case 0x2c:	# MUL
+					match line[i+1]:
+						case 0x66: b0 *= line[i+2]
+						case 0x67: b1 *= line[i+2]
+						case 0x68: b2 *= line[i+2]
+						case 0x69: b3 *= line[i+2]
+						case 0x6a: b4 *= line[i+2]
+						case 0x6b: b5 *= line[i+2]
+						case 0x6c: b6 *= line[i+2]
+						case 0x6d: b7 *= line[i+2]
+					
+					i += 3
+
+				
 
 				### Uncategorized ###
 				case 0xf2:	# NOP
