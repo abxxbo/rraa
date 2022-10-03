@@ -128,8 +128,11 @@ with open(file) as f:
 					lda_write.write(bytearray(b_array))
 
 			case "JMP":
-				Opcode.WriteOpcodeToOut(0xe8, int(tok[1][2:], base=16), 0, output_bin)
-			
+				if tok[1][1] == "x":
+					Opcode.WriteOpcodeToOut(int(tok[1][2:], base=16), 0xe8, 0, output_bin)
+				else:
+					Opcode.WriteOpcodeToOut(int(tok[1]), 0xe8, 0, output_bin)
+
 			case "ADD":
 				reg = 0
 				match tok[1][0:2]:
