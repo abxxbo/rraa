@@ -36,6 +36,10 @@ sp: int = 0
 alr_exec = False # When JMP is detected, this flag will be
 								 # be set, and then jump.
 
+def rraa_exit():
+	print(f"{b0} | {b1} | {b2} | {b3} | {b4} | {b5} | {b6} | {b7}")
+	exit(0)
+
 # Check through each opcode
 with open(bin, "rb") as f:
 	for line in f:
@@ -61,3 +65,18 @@ with open(bin, "rb") as f:
 					if alr_exec == False:
 						i = line[i+1]
 						alr_exec = True
+
+				### Arithmetic ###
+
+				### Uncategorized ###
+				case 0xf2:	# NOP
+					i += 1
+
+				case 0xff:  # HLT
+					rraa_exit()
+				
+				### Stack ###
+
+				### Bitwise ###
+
+				### Interrupts ###
