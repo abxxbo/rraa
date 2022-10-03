@@ -51,7 +51,7 @@ class Interrupt:
 			case 1:	# Serial output
 				match b0:
 					case 0x00:	# Write b1 to stdout
-						print(chr(b1))
+						print(chr(b1), end="")
 
 					case _:
 						pass
@@ -59,7 +59,9 @@ class Interrupt:
 			case _:
 				pass
 			
-
+def RaiseError(errno: str) -> None:
+	print(f"[emu] {errno}")
+	exit(0x7f)
 
 # Check through each opcode
 with open(bin, "rb") as f:
