@@ -41,6 +41,17 @@ def rraa_exit():
 	print(f"{b0} | {b1} | {b2} | {b3} | {b4} | {b5} | {b6} | {b7}")
 	exit(0)
 
+class Interrupt:
+	def __init__(self, int_no) -> None:
+		self.int_no = int_no
+		pass
+
+	def ThrowInterrupt(int_no: int) -> None:
+		match int_no:
+			case _:
+				pass
+
+
 # Check through each opcode
 with open(bin, "rb") as f:
 	for line in f:
@@ -155,3 +166,6 @@ with open(bin, "rb") as f:
 				### Bitwise ###
 
 				### Interrupts ###
+				case 0x27:		# INT
+					int_no = line[i+1]
+					Interrupt.ThrowInterrupt(int_no)
