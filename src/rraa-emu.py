@@ -48,8 +48,17 @@ class Interrupt:
 
 	def ThrowInterrupt(int_no: int) -> None:
 		match int_no:
+			case 1:	# Serial output
+				match b0:
+					case 0x00:	# Write b1 to stdout
+						print(chr(b1))
+
+					case _:
+						pass
+
 			case _:
 				pass
+			
 
 
 # Check through each opcode
