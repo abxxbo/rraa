@@ -63,10 +63,11 @@ def RaiseError(errno: str) -> None:
 	print(f"[emu] {errno}")
 	exit(0x7f)
 
+i = 4	# Skip to 4, since thats for the magic number RRAA 
 # Check through each opcode
 with open(bin, "rb") as f:
 	for line in f:
-		for i in range(len(line)):
+		for _ in range(len(line)):
 			match line[i]:
 				case 0x22: # LDA
 					match line[i+1]:
@@ -84,9 +85,7 @@ with open(bin, "rb") as f:
 				case 0xe8: # JMP
 					# FIXME: This theoretical implementation
 					# of JMP does not work.
-					if alr_exec == False:
-						i = line[i+1]
-						alr_exec = True
+					i = (line[i+1])+4
 
 				### Arithmetic ###
 				case 0x2f:		# ADD
@@ -180,3 +179,8 @@ with open(bin, "rb") as f:
 				case 0x27:		# INT
 					int_no = line[i+1]
 					Interrupt.ThrowInterrupt(int_no)
+					i += 2
+
+				case _:
+					# print(i)
+					pass
